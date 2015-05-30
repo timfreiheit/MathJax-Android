@@ -1,0 +1,38 @@
+<html>
+    <body>
+        <script type='text/x-mathjax-config'>
+             MathJax.Hub.Config({
+                showMathMenu: false,
+                showProcessingMessages: false,
+                messageStyle: "none",
+                jax: ['input/TeX','output/HTML-CSS'],
+                extensions: ['tex2jax.js'],
+                TeX: {
+                    extensions: ['AMSmath.js','AMSsymbols.js',
+                    'noErrors.js','noUndefined.js']
+                }
+             });
+
+        </script>
+        <script type='text/javascript'
+                src='./MathJax/MathJax.js'>
+        </script>
+
+        <script type="text/javascript">
+
+          function rendererCallBack() {
+                Bridge.laTexRendered()
+          }
+
+          function changeLatexText(text) {
+                var element = document.getElementById('math')
+                element.innerHTML=text;
+                MathJax.Hub.Queue(['Typeset',MathJax.Hub,element]);
+                MathJax.Hub.Queue(rendererCallBack);
+          }
+
+        </script>
+
+        <span id='math'></span>
+    </body>
+</html>

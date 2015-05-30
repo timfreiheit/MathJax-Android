@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="MathJaxView">
+        <attr name="android:gravity" />
+        <attr name="verticalScrollbarsEnabled" format="boolean" />
+        <attr name="horizontalScrollbarsEnabled" format="boolean" />
+    </declare-styleable>
+
+</resources>
