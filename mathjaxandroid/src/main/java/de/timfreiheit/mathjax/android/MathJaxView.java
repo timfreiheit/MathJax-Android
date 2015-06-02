@@ -110,12 +110,12 @@ public class MathJaxView extends FrameLayout {
      * called when webView is ready with rendering LaTex
      */
     protected void laTexRendered() {
-        handler.post(new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mWebView.setVisibility(View.VISIBLE);
             }
-        });
+        },100);
     }
 
     /**
