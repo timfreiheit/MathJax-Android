@@ -54,10 +54,14 @@
 		android:background="#AAA">
 
 		<de.timfreiheit.mathjax.android.MathJaxView
+			xmlns:app="http://schemas.android.com/apk/res-auto"
 			android:id="@+id/laTexView"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:layout_gravity="center"/>
+			android:layout_gravity="center"
+			app:input="TeX"
+            app:automaticLinebreaks="true"
+			app:output="SVG"/>
 
 	</FrameLayout>
 

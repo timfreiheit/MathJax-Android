@@ -17,8 +17,8 @@ class MathJaxJavaScriptBridge {
     }
 
     @JavascriptInterface
-    public void laTexRendered(){
-        mOwner.laTexRendered();
+    public void rendered(){
+        mOwner.rendered();
     }
 
 }

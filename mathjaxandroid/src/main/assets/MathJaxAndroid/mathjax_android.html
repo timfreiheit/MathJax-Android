@@ -1,0 +1,71 @@
+<html>
+    <body>
+        <script type='text/x-mathjax-config'>
+             MathJax.Hub.Config({
+                showMathMenu: false,
+                showProcessingMessages: false,
+                messageStyle: "none",
+                jax: [BridgeConfig.getInput(),BridgeConfig.getOutput()],
+                extensions: ['tex2jax.js'],
+                SVG: {
+                    scale: BridgeConfig.getOutputScale(),
+                    minScaleAdjust: BridgeConfig.getMinScaleAdjust(),
+                    blacker: BridgeConfig.getBlacker(),
+                    linebreaks: {
+                        automatic: BridgeConfig.getAutomaticLinebreaks()
+                    }
+                },
+                CommonHTML: {
+                    scale: BridgeConfig.getOutputScale(),
+                    minScaleAdjust: BridgeConfig.getMinScaleAdjust(),
+                    blacker: BridgeConfig.getBlacker(),
+                    linebreaks: {
+                        automatic: BridgeConfig.getAutomaticLinebreaks()
+                    }
+                },
+                "HTML-CSS": {
+                    scale: BridgeConfig.getOutputScale(),
+                    minScaleAdjust: BridgeConfig.getMinScaleAdjust(),
+                    blacker: BridgeConfig.getBlacker(),
+                    linebreaks: {
+                        automatic: BridgeConfig.getAutomaticLinebreaks()
+                    }
+                },
+                TeX: {
+                    extensions: ['AMSmath.js','AMSsymbols.js',
+                    'noErrors.js','noUndefined.js']
+                }
+             });
+
+        </script>
+        <script type='text/javascript'
+                src='./MathJax/MathJax.js'>
+        </script>
+
+        <script type="text/javascript">
+
+          function changeToMML() {
+            MathJax.Hub.Config({
+                 jax: ['input/TeX','output/NativeMML']
+            });
+
+                var element = document.getElementById('math');
+                MathJax.Hub.Queue(['Typeset',MathJax.Hub,element]);
+          }
+
+          function rendererCallBack() {
+                Bridge.rendered();
+          }
+
+          function changeLatexText(text) {
+                var element = document.getElementById('math')
+                element.innerHTML=text;
+                MathJax.Hub.Queue(['Typeset',MathJax.Hub,element]);
+                MathJax.Hub.Queue(rendererCallBack);
+          }
+
+        </script>
+
+        <span id='math'></span>
+    </body>
+</html>

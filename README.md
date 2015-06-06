@@ -9,8 +9,14 @@
 ```
 
     <de.timfreiheit.mathjax.android.MathJaxView
-    			android:layout_width="match_parent"
-    			android:layout_height="match_parent"/>
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/laTexView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:input="TeX"
+            app:automaticLinebreaks="true"
+            app:output="SVG"/>
 
 ```
 
@@ -19,7 +25,7 @@
 
 ```Java
 
-    mMathJaxView.setLaTex("x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}");
+    mMathJaxView.setInputText("x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}");
 
 ```
 

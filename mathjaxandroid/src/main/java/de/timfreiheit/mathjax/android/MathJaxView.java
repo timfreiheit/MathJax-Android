@@ -18,14 +18,13 @@ import android.widget.FrameLayout;
 /**
  * Containerview for an WebView which renders LaTex using MathJax
  * https://github.com/mathjax/MathJax
- * <p/>
  * Created by timfreiheit on 26.05.15.
  */
 public class MathJaxView extends FrameLayout {
 
-    private static final String HTML_LOCATION = "file:///android_asset/MathJaxAndroid/latex.html";
+    private static final String HTML_LOCATION = "file:///android_asset/MathJaxAndroid/mathjax_android.html";
 
-    private String laTex = null;
+    private String inputText = null;
     private WebView mWebView;
     private Handler handler = new Handler();
     protected MathJaxJavaScriptBridge mBridge;
@@ -37,21 +36,26 @@ public class MathJaxView extends FrameLayout {
 
     public MathJaxView(Context context) {
         super(context);
-        init(context, null);
+        init(context, null, null);
+    }
+
+    public MathJaxView(Context context, MathJaxConfig config) {
+        super(context);
+        init(context, null, config);
     }
 
     public MathJaxView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init(context, attrs,null);
     }
 
     public MathJaxView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
+        init(context, attrs,null);
     }
 
     @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
-    private void init(Context context, AttributeSet attrSet) {
+    private void init(Context context, AttributeSet attrSet, MathJaxConfig config) {
         mWebView = new WebView(context);
 
         int gravity = Gravity.CENTER;
@@ -63,7 +67,11 @@ public class MathJaxView extends FrameLayout {
             gravity = attrs.getInteger(R.styleable.MathJaxView_android_gravity, Gravity.CENTER);
             verticalScrollbarsEnabled = attrs.getBoolean(R.styleable.MathJaxView_verticalScrollbarsEnabled, false);
             horizontalScrollbarsEnabled = attrs.getBoolean(R.styleable.MathJaxView_horizontalScrollbarsEnabled, false);
+            config = new MathJaxConfig(attrs);
             attrs.recycle();
+        }
+        if (config == null) {
+            config = new MathJaxConfig();
         }
 
         addView(
@@ -87,14 +95,15 @@ public class MathJaxView extends FrameLayout {
                     return;
                 }
                 webViewLoaded = true;
-                if (!TextUtils.isEmpty(laTex)) {
-                    setLaTex(laTex);
+                if (!TextUtils.isEmpty(inputText)) {
+                    setInputText(inputText);
                 }
             }
         });
 
         mBridge = new MathJaxJavaScriptBridge(this);
         mWebView.addJavascriptInterface(mBridge, "Bridge");
+        mWebView.addJavascriptInterface(config,"BridgeConfig");
 
         // be careful, we do not need internet access
         mWebView.getSettings().setBlockNetworkLoads(true);
@@ -109,22 +118,22 @@ public class MathJaxView extends FrameLayout {
     /**
      * called when webView is ready with rendering LaTex
      */
-    protected void laTexRendered() {
+    protected void rendered() {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mWebView.setVisibility(View.VISIBLE);
             }
-        },100);
+        }, 100);
     }
 
     /**
      * change the displayed LaTex
      *
-     * @param laTex laTex-String
+     * @param inputText formatted string
      */
-    public void setLaTex(String laTex) {
-        this.laTex = laTex;
+    public void setInputText(String inputText) {
+        this.inputText = inputText;
 
         //wait for WebView to finish loading
         if (!webViewLoaded) {
@@ -132,8 +141,8 @@ public class MathJaxView extends FrameLayout {
         }
 
         String laTexString;
-        if (laTex != null) {
-            laTexString = doubleEscapeTeX(laTex);
+        if (inputText != null) {
+            laTexString = doubleEscapeTeX(inputText);
         } else {
             laTexString = "";
         }
@@ -156,8 +165,8 @@ public class MathJaxView extends FrameLayout {
      * @return the current laTex-String
      * null if not set
      */
-    public String getLaTex() {
-        return laTex;
+    public String getInputText() {
+        return inputText;
     }
 
     private String doubleEscapeTeX(String s) {

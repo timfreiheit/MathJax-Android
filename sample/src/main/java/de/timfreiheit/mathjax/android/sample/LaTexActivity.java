@@ -34,19 +34,19 @@ public class LaTexActivity extends Activity
         EditText e = (EditText) findViewById(R.id.edit);
         switch (id){
             case R.id.showBtn: {
-                mMathJaxView.setLaTex(e.getText().toString());
+                mMathJaxView.setInputText(e.getText().toString());
                 break;
             }
             case R.id.clearBtn: {
                 e.setText("");
-                mMathJaxView.setLaTex("");
+                mMathJaxView.setInputText("");
                 break;
             }
             case R.id.exampleBtn: {
                 e.setText(getExample(exampleIndex++));
                 if (exampleIndex > getResources().getStringArray(R.array.tex_examples).length-1)
                     exampleIndex=0;
-                mMathJaxView.setLaTex(e.getText().toString());
+                mMathJaxView.setInputText(e.getText().toString());
                 break;
             }
         }
