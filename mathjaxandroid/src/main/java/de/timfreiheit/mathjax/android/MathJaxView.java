@@ -147,12 +147,8 @@ public class MathJaxView extends FrameLayout {
             laTexString = "";
         }
 
-        String text = "\\\\["
-                + laTexString
-                + "\\\\]";
-
         mWebView.setVisibility(View.INVISIBLE);
-        String javascriptCommand = "javascript:changeLatexText(\"" + text + "\")";
+        String javascriptCommand = "javascript:changeLatexText(\"" + laTexString + "\")";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mWebView.evaluateJavascript(javascriptCommand, null);
         } else {
@@ -173,8 +169,8 @@ public class MathJaxView extends FrameLayout {
         String t = "";
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '\'') t += '\\';
-            if (s.charAt(i) != '\n') t += s.charAt(i);
             if (s.charAt(i) == '\\') t += "\\";
+            if (s.charAt(i) != '\n') t += s.charAt(i);
         }
         return t;
     }
