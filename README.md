@@ -30,4 +30,16 @@
 ```
 
 
+## Adding Listeners
+
+```Java
+
+    mMathJaxView.setRenderListener(new MathJaxView.OnMathJaxRenderListener() {
+            @Override
+            public void onRendered() {
+                showToast();
+            }
+        });
+
+```
 
