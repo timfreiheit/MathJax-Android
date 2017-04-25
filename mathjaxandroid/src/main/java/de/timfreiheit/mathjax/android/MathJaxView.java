@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
@@ -34,6 +33,13 @@ public class MathJaxView extends FrameLayout {
      */
     private boolean webViewLoaded = false;
 
+    public interface OnMathJaxRenderListener {
+        void onRendered();
+
+    }
+
+    private OnMathJaxRenderListener onMathJaxRenderListener;
+
     public MathJaxView(Context context) {
         super(context);
         init(context, null, null);
@@ -46,12 +52,16 @@ public class MathJaxView extends FrameLayout {
 
     public MathJaxView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs,null);
+        init(context, attrs, null);
     }
 
     public MathJaxView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs,null);
+        init(context, attrs, null);
+    }
+
+    public void setRenderListener(OnMathJaxRenderListener onMathJaxRenderListener) {
+        this.onMathJaxRenderListener = onMathJaxRenderListener;
     }
 
     @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
@@ -103,7 +113,7 @@ public class MathJaxView extends FrameLayout {
 
         mBridge = new MathJaxJavaScriptBridge(this);
         mWebView.addJavascriptInterface(mBridge, "Bridge");
-        mWebView.addJavascriptInterface(config,"BridgeConfig");
+        mWebView.addJavascriptInterface(config, "BridgeConfig");
 
         // be careful, we do not need internet access
         mWebView.getSettings().setBlockNetworkLoads(true);
@@ -119,12 +129,16 @@ public class MathJaxView extends FrameLayout {
      * called when webView is ready with rendering LaTex
      */
     protected void rendered() {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mWebView.setVisibility(View.VISIBLE);
-            }
-        }, 100);
+        if (onMathJaxRenderListener != null) {
+            onMathJaxRenderListener.onRendered();
+        } else {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mWebView.setVisibility(View.VISIBLE);
+                }
+            }, 100);
+        }
     }
 
     /**
@@ -146,8 +160,9 @@ public class MathJaxView extends FrameLayout {
         } else {
             laTexString = "";
         }
+        if (onMathJaxRenderListener == null)
+            mWebView.setVisibility(View.INVISIBLE);
 
-        mWebView.setVisibility(View.INVISIBLE);
         String javascriptCommand = "javascript:changeLatexText(\"" + laTexString + "\")";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mWebView.evaluateJavascript(javascriptCommand, null);
