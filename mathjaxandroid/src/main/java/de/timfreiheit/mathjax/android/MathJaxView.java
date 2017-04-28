@@ -129,16 +129,14 @@ public class MathJaxView extends FrameLayout {
      * called when webView is ready with rendering LaTex
      */
     protected void rendered() {
-        if (onMathJaxRenderListener != null) {
-            onMathJaxRenderListener.onRendered();
-        } else {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mWebView.setVisibility(View.VISIBLE);
-                }
-            }, 100);
-        }
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.setVisibility(View.VISIBLE);
+                if (onMathJaxRenderListener != null)
+                    onMathJaxRenderListener.onRendered();
+            }
+        }, 100);
     }
 
     /**
@@ -160,8 +158,8 @@ public class MathJaxView extends FrameLayout {
         } else {
             laTexString = "";
         }
-        if (onMathJaxRenderListener == null)
-            mWebView.setVisibility(View.INVISIBLE);
+
+        mWebView.setVisibility(View.INVISIBLE);
 
         String javascriptCommand = "javascript:changeLatexText(\"" + laTexString + "\")";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
